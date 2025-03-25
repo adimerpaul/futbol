@@ -1,20 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEquipoDto } from './dto/create-equipo.dto';
 import { UpdateEquipoDto } from './dto/update-equipo.dto';
+import { Equipo } from './entities/equipo.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class EquiposService {
+  constructor(
+    @InjectRepository(Equipo)
+    private equipoRepository: Repository<Equipo>,
+  ) {}
   create(createEquipoDto: CreateEquipoDto) {
     return 'This action adds a new equipo';
   }
 
-  findAll() {
-    return `This action returns all equipos`;
+  async findAll(ligaId) {
+    if (!ligaId) {
+      return await this.equipoRepository.find();
+    }
+    // console.log('ligaId', ligaId);
+    const equipos = await this.equipoRepository.find({
+      where: { liga: { id: ligaId } },
+    });
+
+    return equipos;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} equipo`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} equipo`;
+  // }
 
   update(id: number, updateEquipoDto: UpdateEquipoDto) {
     return `This action updates a #${id} equipo`;

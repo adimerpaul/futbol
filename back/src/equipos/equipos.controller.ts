@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put, Query,
+} from '@nestjs/common';
 import { EquiposService } from './equipos.service';
 import { CreateEquipoDto } from './dto/create-equipo.dto';
 import { UpdateEquipoDto } from './dto/update-equipo.dto';
@@ -13,16 +22,17 @@ export class EquiposController {
   }
 
   @Get()
-  findAll() {
-    return this.equiposService.findAll();
+  findAll(@Query('ligaId') ligaId) {
+    // console.log('ligaId', ligaId);
+    return this.equiposService.findAll(ligaId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.equiposService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.equiposService.findOne(+id);
+  // }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateEquipoDto: UpdateEquipoDto) {
     return this.equiposService.update(+id, updateEquipoDto);
   }

@@ -18,7 +18,7 @@ export class Equipo {
   id: number;
   @Column({ nullable: false })
   name: string;
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 'default.png' })
   imagen: string;
   @Column({ nullable: false, default: 'Futbol' })
   tipo: string;
