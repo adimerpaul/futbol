@@ -11,8 +11,9 @@ export class EquiposService {
     @InjectRepository(Equipo)
     private equipoRepository: Repository<Equipo>,
   ) {}
-  create(createEquipoDto: CreateEquipoDto) {
-    return 'This action adds a new equipo';
+  async create(body) {
+    const equipo = this.equipoRepository.create(body);
+    return await this.equipoRepository.save(equipo);
   }
 
   async findAll(ligaId) {
