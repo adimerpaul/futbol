@@ -11,25 +11,42 @@ export class LigasService {
     @InjectRepository(Ligas)
     private ligasRepository: Repository<Ligas>,
   ) {}
-  create(createLigasDto: CreateLigasDto) {
-    return 'This action adds a new ligas';
+  async create(body) {
+    const liga = this.ligasRepository.create(body);
+    await this.ligasRepository.save(liga);
+    return liga;
   }
 
   async findAll() {
-    return await this.ligasRepository.find({
-      select: ['id', 'name'],
-    });
+    const ligas = await this.ligasRepository.find();
+
+    return ligas.map((liga) => ({
+      ...liga,
+      equipos: 0,
+    }));
   }
 
   findOne(id: number) {
     return `This action returns a #${id} ligas`;
   }
 
-  update(id: number, updateLigasDto: UpdateLigasDto) {
-    return `This action updates a #${id} ligas`;
+  async update(id: number, body) {
+    const liga = await this.ligasRepository.findOne({ where: { id } });
+    if (!liga) {
+      throw new Error('Liga not found');
+    }
+
+    await this.ligasRepository.update({ id }, body);
+    return this.ligasRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ligas`;
+  async remove(id: number) {
+    const liga = await this.ligasRepository.findOne({ where: { id } });
+    if (!liga) {
+      throw new Error('Liga not found');
+    }
+
+    await this.ligasRepository.softDelete({ id });
+    return liga;
   }
 }

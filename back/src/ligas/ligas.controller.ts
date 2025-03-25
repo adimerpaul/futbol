@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete, Put,
 } from '@nestjs/common';
 import { LigasService } from './ligas.service';
 import { CreateLigasDto } from './dto/create-ligas.dto';
@@ -15,10 +15,10 @@ import { UpdateLigasDto } from './dto/update-ligas.dto';
 export class LigasController {
   constructor(private readonly ligasService: LigasService) {}
 
-  // @Post()
-  // create(@Body() createLigasDto: CreateLigasDto) {
-  //   return this.ligasService.create(createLigasDto);
-  // }
+  @Post()
+  create(@Body() body) {
+    return this.ligasService.create(body);
+  }
 
   @Get()
   findAll() {
@@ -30,13 +30,13 @@ export class LigasController {
   //   return this.ligasService.findOne(+id);
   // }
   //
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateLigasDto: UpdateLigasDto) {
-  //   return this.ligasService.update(+id, updateLigasDto);
-  // }
-  //
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.ligasService.remove(+id);
-  // }
+  @Put(':id')
+  update(@Param('id') id: string, @Body() body) {
+    return this.ligasService.update(+id, body);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.ligasService.remove(+id);
+  }
 }

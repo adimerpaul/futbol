@@ -6,17 +6,20 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Equipo } from '../../equipos/entities/equipo.entity';
+import { Ligas } from '../../ligas/entities/ligas.entity';
 
-@Entity('ligas')
-export class Ligas {
+@Entity('equipos')
+export class Equipo {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ nullable: false })
   name: string;
+  @Column({ nullable: false })
+  imagen: string;
   @Column({ nullable: false, default: 'Futbol' })
   tipo: string;
   @CreateDateColumn()
@@ -25,6 +28,7 @@ export class Ligas {
   updatedAt: Date;
   @DeleteDateColumn()
   deletedAt: Date;
-  @OneToMany(() => Equipo, (equipo) => equipo.liga)
-  equipos: Equipo[];
+  // liga
+  @ManyToOne(() => Ligas, (liga) => liga.equipos)
+  liga: Ligas;
 }

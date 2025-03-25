@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { LigasModule } from './ligas/ligas.module';
+import { EquiposModule } from './equipos/equipos.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -18,6 +19,7 @@ import { LigasModule } from './ligas/ligas.module';
       synchronize: process.env.DB_SYNCHRONIZE === 'true',
     }),
     LigasModule,
+    EquiposModule,
   ],
   controllers: [AppController],
   providers: [AppService],
