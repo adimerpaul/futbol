@@ -24,7 +24,10 @@ export class EquiposService {
       where: { liga: { id: ligaId } },
     });
 
-    return equipos;
+    return equipos.map((equipo) => ({
+      ...equipo,
+      ultimos5: ['Ganó', 'Perdió', '', 'Empate', 'Perdió'],
+    }));
   }
 
   // findOne(id: number) {
