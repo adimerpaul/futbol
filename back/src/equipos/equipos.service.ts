@@ -12,7 +12,11 @@ export class EquiposService {
     private equipoRepository: Repository<Equipo>,
   ) {}
   async create(body) {
-    const equipo = this.equipoRepository.create(body);
+    const equipo = this.equipoRepository.create({
+      name: body.name,
+      liga: { id: body.ligaId },
+      imagen: body.imagen,
+    });
     return await this.equipoRepository.save(equipo);
   }
 
