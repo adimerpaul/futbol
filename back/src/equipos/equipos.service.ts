@@ -39,11 +39,24 @@ export class EquiposService {
   //   return `This action returns a #${id} equipo`;
   // }
 
-  update(id: number, updateEquipoDto: UpdateEquipoDto) {
-    return `This action updates a #${id} equipo`;
+  async update(id: number, body) {
+    const equipo = await this.equipoRepository.findOne({ where: { id } });
+    if (!equipo) {
+      throw new Error(`Equipo with id ${id} not found`);
+    }
+    equipo.name = body.name;
+    if (body.imagen) {
+      equipo.imagen = body.imagen;
+    }
+    return await this.equipoRepository.save(equipo);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} equipo`;
+  async remove(id: number) {
+    console.log('id', id);
+    const equipo = await this.equipoRepository.findOne({ where: { id } });
+    if (!equipo) {
+      throw new Error(`Equipo with id ${id} not found`);
+    }
+    return await this.equipoRepository.softDelete({ id });
   }
 }

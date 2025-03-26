@@ -74,8 +74,51 @@ export class EquiposController {
   // }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateEquipoDto: UpdateEquipoDto) {
-    return this.equiposService.update(+id, updateEquipoDto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, file.fieldname + '-' + extname(file.originalname));
+        },
+      }),
+    }),
+  )
+  async update(@Param('id') id: string, @Body() body, @UploadedFile() file) {
+    console.log('file', file);
+    if (file) {
+      // console.log('file', file);
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const exten = extname(file.originalname);
+      const compressedImage = 'compressed-' + uniqueSuffix + exten;
+      const compressedPath = './uploads/' + compressedImage;
+      // console.log('exten', exten);
+
+      await sharp(file.path)
+        .resize(124)
+        // .jpeg({ quality: 80 })
+        .png({ compressionLevel: 9 })
+        .toFile(compressedPath);
+      // sharp(file.path)
+      //   .resize(124)
+      //   .jpeg({ quality: 80 })
+      //   // .png({ compressionLevel: 9 })
+      //   .toFile(compressedPath);
+
+      fs.unlink(file.path, (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('File deleted');
+        }
+      });
+      body.imagen = compressedImage;
+    } else {
+      delete body.imagen;
+    }
+    return this.equiposService.update(+id, body);
   }
 
   @Delete(':id')
